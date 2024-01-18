@@ -1,12 +1,12 @@
 import express from "express"
 import { postImage, getAllImage, getOneImage } from "../controller/imageController"
-import multer from "multer"
+import { image } from "../Utils/multer"
 
-const upload = multer().single("image")
 
 const router = express.Router()
 
-router.route("/post-image").post(upload, postImage)
+
+router.route("/post-image").post(image, postImage)
 router.route("/get-images").get(getAllImage)
 router.route("/get-image").get(getOneImage)
 

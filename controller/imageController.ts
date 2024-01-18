@@ -1,29 +1,38 @@
 import {Response} from "express"
 import ImageModel from "../Model/ImageModel"
-import { streamUpload } from "../Utils/stream"
-import {HTTP} from "../Error/mainError"
+
+import {HTTP, mainError} from "../Error/mainError"
+import cloudinary from "../Utils/cloudinary"
+
 
 
 
 export const postImage = async (req: any, res: Response) => {
     try {
-        const {secure_url, public_id} : any = await streamUpload(req)
+        const {secure_url, public_id} : any = await cloudinary.uploader.upload(req.file.path)
 
         const Image = await ImageModel.create({
             image: secure_url,
             imageID: public_id
         })
-        return res.status(HTTP.OK).json({
+        return res.status(HTTP.CREATED).json({
             message: "Image has successfully been uploaded",
             data: Image
         })
     } catch (error) {
-        return res.status(HTTP.BAD_REQUEST).json({
-    message: "unable to post image",
-    data: error.message
-        })
+      new mainError({
+        name: "image creation error",
+        message: `This error came while trying to create the image`,
+        status: HTTP.BAD_REQUEST,
+        success: false 
+      })
+      return res.status(HTTP.BAD_REQUEST).json({message: "Error", data: error.message})
     }
 }
+
+
+
+
 
 export const getAllImage = async (req: any, res: Response) => {
     try {
@@ -34,11 +43,15 @@ export const getAllImage = async (req: any, res: Response) => {
         data: image
        })
     } catch (error) {
-        return res.status(HTTP.BAD_REQUEST).json({
-            message: "unable to get images"
-                })
+        new mainError({
+            name: "image creation error",
+            message: `This error came while trying to create the image`,
+            status: HTTP.BAD_REQUEST,
+            success: false 
+          })
+          return res.status(HTTP.BAD_REQUEST).json({message: "Error"})
+        }
     }
-}
 
 
 
@@ -53,9 +66,12 @@ export const getOneImage = async (req: any, res: Response) => {
             data: image
         })
     } catch (error) {
-        return res.status(HTTP.BAD_REQUEST).json({
-            message: "unable to get one image",
-            data: error.message
-        })
+        new mainError({
+            name: "image creation error",
+            message: `This error came while trying to create the image`,
+            status: HTTP.BAD_REQUEST,
+            success: false 
+          })
+          return res.status(HTTP.BAD_REQUEST).json({message: "Error", data:error.message})
+        }
     }
-}

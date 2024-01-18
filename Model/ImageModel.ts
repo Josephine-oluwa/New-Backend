@@ -1,9 +1,5 @@
 import mongoose from "mongoose"
-
-interface Image {
-    image: string;
-    imageID: string
-}
+import { Image } from "./imageInterface"
 
 interface iImage extends Image, mongoose.Document{}
 

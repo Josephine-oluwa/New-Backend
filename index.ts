@@ -10,8 +10,8 @@ const app: Application = express()
 
 mainApp(app)
 
-const server = app.listen(process.env.PORT! || port, ()=> {
-    console.log("server is now connected")
+const server = app.listen(process.env.PORT! || port, () => {
+    console.log("server is on now")
     connectDB
 })
 
